@@ -1,4 +1,4 @@
-# Gas-Money
+# Gas Money
 Basic calculator to see how much people owe you when you drive them.<br/>
 You will need the following Python modules installed:
 * requests
