@@ -2,7 +2,8 @@
 Basic calculator to see how much people owe you when you drive them.<br/>
 You will need the following Python modules installed:
 * requests
-* json
+* json<br/>
+
 You can install these using pip3 if you don't have them.
 
 You will also need your own API Key from this site:
