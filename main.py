@@ -26,14 +26,33 @@ for models in carsRoot.findall("menuItem"):
     model = models.find("value").text
     print(model+"\n")
 
-modelSelection = input("Do you see your model in this list? If you do, please type in the model name now. If you do not see it, please enter 0, and you will be prompted to manually enter the fuel economy.")
+modelSelection = input("Do you see your model in this list? If you do, please type in the model name now. If you do not see it, please enter 0, and you will be prompted to manually enter the fuel economy.\n")
 
+if modelSelection != "0":
+    modelSelection = modelSelection.replace(" ", "+")
+
+    modelUrl = "https://www.fueleconomy.gov/ws/rest/vehicle/menu/options?year="+year+"&make="+make+"&model="+modelSelection
+    modelData = requests.get(modelUrl)
+    modelRoot = ET.fromstring(modelData.content)
+    modelId = modelRoot[0][1].text
+
+    fuelEconUrl = "https://www.fueleconomy.gov/ws/rest/ympg/shared/ympgVehicle/"+modelId
+    fuelEconData = requests.get(fuelEconUrl)
+    try:
+        fuelEconRoot = ET.fromstring(fuelEconData.content)
+        fuelEcon = float(fuelEconRoot[0].text)
+        print("Fuel Economy data successfully retrieved!")
+    except:
+        print("Sorry, we couldn't retrieve any mpg data for this car. This usually happens with newer models since there needs to be data collected on it. Please enter the fuel economy manually: \n")
+        fuelEcon = float(input("What is the fuel economy of your car in miles per gallon? "))
+else:
+    fuelEcon = float(input("What is the fuel economy of your car in miles per gallon? "))
 
 #The variables needed to calculate gas price
-fuelTypeInput = int(input("What type of fuel does your vehicle use?\nDiesel[0]\nRegular[1]\nMidgrade[2]\nPremium[3]\nPlease input the corresponding number. "))
-fuelEcon = float(input("What is the fuel economy of your car in miles per gallon? "))
-people = int(input("How many people are you driving? "))
-distance = float(input("How many miles are you driving? You can use decimals. "))
+fuelTypeInput = int(input("\nWhat type of fuel does your vehicle use?\nDiesel[0]\nRegular[1]\nMidgrade[2]\nPremium[3]\nPlease input the corresponding number. "))
+
+people = int(input("\nHow many people are you driving? "))
+distance = float(input("\nHow many miles are you driving? You can use decimals. "))
 
 if fuelTypeInput == 0:
     price = dieselPrice
@@ -47,4 +66,4 @@ else:
 price = float(price)
 gasMoney = (distance*price)/(fuelEcon*people)
 
-print("Each person will owe you $" + str(round(gasMoney, 2)))
+print("\nEach person will owe you $" + str(round(gasMoney, 2)))
