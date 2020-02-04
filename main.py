@@ -1,5 +1,4 @@
 import requests
-import json
 import xml.etree.ElementTree as ET
 
 print("Welcome to Gas Money Calculator by Sri Julapally")
